@@ -28,9 +28,9 @@ image(I)
 
 Vlum = [1, 1, 1];  
 Vlum = Vlum / norm(Vlum); 
-Vredgreen  = [ 1/sqrt(2) -1/sqrt(2)  0 ] ;
+Vredgreen  = [ 1, -1, 0 ] ;
 Vredgreen = Vredgreen / norm(Vredgreen); 
-Vblueyellow  = [ 1/sqrt(6)  1/sqrt(6) -2/sqrt(6) ] ;
+Vblueyellow  = [ 1, 1, -2 ] ;
 Vblueyellow = Vblueyellow / norm(Vblueyellow); 
  
 V = [Vlum; Vredgreen; Vblueyellow];
@@ -59,12 +59,12 @@ imwrite(im, 'lum.jpg');    %  prints image only (no title)
       
 figure          
 im = remapImageUint8(redgreen);
-image(redgreen)
+image(im)
 colormap(gray(256)) 
 title(' red-green ')
 
 figure          
-im = remapImageUint8(redgreen);
+im = remapImageUint8(blueyellow);
 image(im)
 colormap(gray(256)) 
 title(' blue-yellow ')
@@ -73,5 +73,16 @@ title(' blue-yellow ')
 
 %  Solution for Q1a
 
+CRed = 128./((IRed+IGreen+IBlue)./3).*IRed;
+CGreen = 128./((IRed+IGreen+IBlue)./3).*IGreen;
+CBlue = 128./((IRed+IGreen+IBlue)./3).*IBlue;
+
+CI = uint8(cat(3,CRed,CGreen,CBlue));
+
+figure
+image(CI)
+title(' chromaticity-only ')
+
+imwrite(CI, 'chromaticity-only.jpg');
 
 %  Solution for Q1b
