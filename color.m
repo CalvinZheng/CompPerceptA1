@@ -8,7 +8,7 @@
 close all
 clear
 
-I = imread('cows.jpg');
+I = imread('green.jpg');
 
 sizeI = size(I);
 Nrows = sizeI(1);
@@ -23,6 +23,7 @@ IBlue  = double( I(:,:,3));
 
 figure          
 image(I)
+title(' original ')
 
 %  Here we define the luminance, red-green, and blue-yellow axes
 
@@ -49,7 +50,9 @@ blueyellow =  Vblueyellow(1) * IRed + ...         %  Nrows x Ncols
               Vblueyellow(2) * IGreen + ...
               Vblueyellow(3) * IBlue;
 
-figure          
+f=figure;
+figure(f);
+subplot(3,2,1);
 im = remapImageUint8(lum);
 image(im)
 colormap(gray(256)) 
@@ -57,13 +60,13 @@ title(' luminance ')
 imwrite(im, 'lum.jpg');    %  prints image only (no title)
 %print('lum', '-djpeg ');   %  prints figure (with title)          
       
-figure          
+subplot(3,2,3);
 im = remapImageUint8(redgreen);
 image(im)
 colormap(gray(256)) 
 title(' red-green ')
 
-figure          
+subplot(3,2,5);        
 im = remapImageUint8(blueyellow);
 image(im)
 colormap(gray(256)) 
@@ -77,12 +80,33 @@ CRed = 128./((IRed+IGreen+IBlue)./3).*IRed;
 CGreen = 128./((IRed+IGreen+IBlue)./3).*IGreen;
 CBlue = 128./((IRed+IGreen+IBlue)./3).*IBlue;
 
-CI = uint8(cat(3,CRed,CGreen,CBlue));
+CI = remapImageUint8(cat(3,CRed,CGreen,CBlue));
 
 figure
 image(CI)
 title(' chromaticity-only ')
 
-imwrite(CI, 'chromaticity-only.jpg');
+imwrite(CI, 'chromaticity-only.png');
 
 %  Solution for Q1b
+
+SobelX = [-1 0 1; -2 0 2; -1 0 1];
+SobelY = [-1 -2 -1; 0 0 0; 1 2 1];
+
+Glum = sqrt(conv2(lum, SobelX).^2 + conv2(lum, SobelY).^2);
+Gredgreen = sqrt(conv2(redgreen, SobelX).^2 + conv2(redgreen, SobelY).^2);
+Gblueyellow = sqrt(conv2(blueyellow, SobelX).^2 + conv2(blueyellow, SobelY).^2);
+
+figure(f)
+subplot(3,2,2)
+image(remapImageUint8(Glum))
+title(' luminance-edge ')
+
+subplot(3,2,4)
+image(remapImageUint8(Gredgreen))
+title(' red-green-edge ')
+
+subplot(3,2,6)
+image(remapImageUint8(Gblueyellow))
+title(' blue-yellow-edge ')
+

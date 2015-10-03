@@ -4,8 +4,11 @@
 %  Make an image which is a random texture defined by "1/f noise"
 %  (which you need not try to understand at this point in the course).
 
-N             = 512;
-Ibackground  = makeTexture(N);
+%N             = 512;
+%Ibackground  = makeTexture(N);
+Ibackground = double(rgb2gray(imread('nature.png')))./255;
+sizeI = size(Ibackground);
+N = sizeI(1);
 
 figure
 
@@ -20,8 +23,8 @@ figure
 %  A raised cosine function goes from 0 to 1.
 raisedCosine         = (make2Dcosine(N, 4, 0) + 1)/2;
 
-alphaMin = 0.4;       %  You need to change these values.
-alphaMax = 0.9;       %       "
+alphaMin = 0;       %  You need to change these values.
+alphaMax = 0.4;       %       "
 
 %  Define the opacity function for the foreground layer.
 alpha = alphaMin + (alphaMax - alphaMin) * raisedCosine;
@@ -31,7 +34,11 @@ Iforeground = 1.0;    %  Do not change this.  (Making this smaller would give th
 
 %  Blend the (constant) foreground with the background texture.
 
-image( (alpha * Iforeground +  (1-alpha) .* Ibackground ) *  255);    
+
+I = (alpha * Iforeground +  (1-alpha) .* Ibackground ) *  255;
+I = remapImageUint8(I);
+image(I);
+imwrite(I,'layered.png');
 
 colormap(gray(255));
 axis square

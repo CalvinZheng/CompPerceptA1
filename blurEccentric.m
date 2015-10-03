@@ -10,7 +10,7 @@ N = 512;
 I = makeTexture(N);
 % 
 
-contrast    =  0.8   %  max 1.0
+contrast    =  0.8;   %  max 1.0
 sigmaAtEdge =  2;     %  sigma at a distance which is the image half width
 
 gradientSigma   =  sigmaAtEdge/(N/2);   % change in sigma  per pixel
@@ -102,7 +102,7 @@ Ifixate(N/2-halfwidth:N/2+halfwidth,...
 image(Ifixate); 
 colormap gray; axis square;  hold on; pause(1);
 image(IblurContrast); 
-xlabel(['Iblur,    sigma at edge is ' num2str(sigmaAtEdge) ' pixels']);  
+xlabel(['Iblur,    sigma at edge is ' num2str(sigmaAtEdge) ' pixels, contrast=' num2str(contrast)]);  
 %pause(.5); close
 
 
